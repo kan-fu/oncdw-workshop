@@ -1,2 +1,2 @@
 streamlit
-onc
+oncdw @ git+https://github.com/OceanNetworksCanada/oncdw@main

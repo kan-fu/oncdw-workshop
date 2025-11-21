@@ -1,52 +1,22 @@
 import streamlit as st
-import os
-from onc import ONC
-import pandas as pd
+from oncdw import ONCDW
 
-st.title("Oceans 3.0 Open API Playground")
-st.metric("Web Services", 2, 1)
-
-token = os.getenv("ONC_TOKEN")
-onc = ONC(token)
+client = ONCDW() 
 
 with st.sidebar:
-    st.markdown("[Discovery Services](#discovery-services)")
-    st.markdown("[Real-time Services](#real-time-services)")
+    client.ui.device_sidebar({"device_id": 21501, "device_code": "BPR-1027NW"})
+    client.ui.sensor_sidebar({"sensor_id": 4182, "sensor_name": "Seafloor Pressure"})
+    client.ui.sensor_sidebar(
+        {"sensor_id": 7712, "sensor_name": "Uncompensated Seafloor Pressure"}
+    )
+    client.ui.device_sidebar({"device_id": 12501, "device_code": "BPR_BC"})
+    client.ui.sensor_sidebar({"sensor_id": 4176, "sensor_name": "Seafloor Pressure"})
 
-# col1, col2 = st.columns(2)
-col1, col2 = st.tabs(["Discovery", "Real-time"])
-
-with col1:
-    st.header(":blue[Discovery Services]")
-
-    st.subheader(":green[Return locations]")
-
-    st.markdown(":blue-badge[GET] `/locations`")
-
-    location_code = st.text_input("locationCode", placeholder="FGPD")
-
-    if st.button("Run", key="location_button"):
-        param = {"locationCode": location_code}
-        location_info = onc.getLocations(param)
-        st.json(location_info)
-
-with col2:
-    st.header(":blue[Real-time Services]")
-
-    st.subheader(":green[Return archivefiles]")
-
-    st.markdown(":blue-badge[GET] `/archivefile`")
-
-    device_code = st.text_input("deviceCode", value="BPR_BC")
-    last_days = st.number_input("last days", value=4)
-
-    if st.button("Run", key="archivefile_button"):
-        param = {
-            "deviceCode": device_code,
-            "dateFrom": f"-P{last_days}D",
-            "returnOptions": "all",
-        }
-        archivefile = onc.getArchivefile(param)
-        df = pd.DataFrame(archivefile["files"])
-        df["dateFrom"] = pd.to_datetime(df["dateFrom"])
-        st.line_chart(df, x="dateFrom", y="uncompressedFileSize")
+client.ui.device({"device_id": 21501, "device_code": "BPR-1027NW"})
+sensor1 = {"sensor_id": 4182, "sensor_name": "Seafloor Pressure"}
+client.section.time_series(sensor1)
+sensor2 = {"sensor_id": 7712, "sensor_name": "Uncompensated Seafloor Pressure"}
+client.section.time_series(sensor2)
+client.ui.device({"device_id": 12501, "device_code": "BPR_BC"})
+sensor1 = {"sensor_id": 4176, "sensor_name": "Seafloor Pressure"}
+client.section.time_series(sensor1)
