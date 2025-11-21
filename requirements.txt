@@ -1,2 +1,3 @@
 streamlit
+streamlit-ace
 oncdw @ git+https://github.com/OceanNetworksCanada/oncdw@main

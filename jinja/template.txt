@@ -1,0 +1,10 @@
+{% for device in devices %}
+Generating device {{ device.device_id }} with device code {{ device.device_code }}.
+  {% for sensor in device.sensors %}
+    {% if "Uncompensated" in sensor.sensor_name %}
+    - Plotting Uncompensated sensor time series for sensor ID: {{ sensor.sensor_id }}, Name: {{ sensor.sensor_name }}
+    {% else %}
+    - Plotting sensor time series for sensor ID: {{ sensor.sensor_id }}, Name: {{ sensor.sensor_name }}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
